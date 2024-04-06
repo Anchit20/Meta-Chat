@@ -3,7 +3,8 @@ import styled from "styled-components";
 import Picker from "emoji-picker-react";
 import { IoMdSend } from "react-icons/io";
 import { BsEmojiSmileFill } from "react-icons/bs";
-function ChatInput() {
+import { Theme } from "emoji-picker-react";
+function ChatInput({ handleSendMsg }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -12,20 +13,32 @@ function ChatInput() {
   };
 
   const handleEmojiClick = (e, emoji) => {
-    console.log(emoji);
+    // console.log(emoji.srcElement);
+    // console.log(e);
     let message = msg;
-    message = message + emoji.emoji;
-    setMsg((prevMsg) => prevMsg + emoji.emoji);
+    message = message + e.emoji;
+    setMsg(message);
   };
+
+  const sendChat = (e) => {
+    e.preventDefault();
+    if (msg.length > 0) {
+      handleSendMsg(msg);
+      setMsg("");
+    }
+  };
+
   return (
     <Container>
       <div className="button-container">
         <div className="emoji emoji-picker-react">
           <BsEmojiSmileFill onClick={handleEmojiPicker} />
-          {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
+          {showEmojiPicker && (
+            <Picker height={350} width={300} onEmojiClick={handleEmojiClick} />
+          )}
         </div>
       </div>
-      <form className="input-container">
+      <form className="input-container" onSubmit={(e) => sendChat(e)}>
         <input
           type="text"
           placeholder="message"
@@ -60,8 +73,9 @@ const Container = styled.div`
       }
       .EmojiPickerReact {
         position: absolute;
-        top: -450px;
-        ${"" /* background-color: #080420; */}
+        top: -370px;
+        height: 200;
+        width: 10000px;
       }
     }
   }
